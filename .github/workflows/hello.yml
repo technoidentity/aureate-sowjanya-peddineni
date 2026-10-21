@@ -1,5 +1,4 @@
-
-name: My First GitHub Action
+name: Rust CI
 
 on:
   push:
@@ -7,12 +6,25 @@ on:
       - practice/github-actions
 
 jobs:
-  hello:
+  rust-check:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Print message
-        run: echo "Hello from GitHub Actions!"
+    defaults:
+      run:
+        working-directory: rust-ci-practice
 
-      - name: Check directory
-        run: pwd
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        run: rustup toolchain install stable
+
+      - name: Check Rust code
+        run: cargo check
+
+      - name: Run tests
+        run: cargo test
+
+      - name: Build Rust project
+        run: cargo build
